@@ -1,6 +1,8 @@
 import express from "express";
 const app = express();
 const port = 8888;
+import cors from "cors";
+app.use(cors());
 app.use(express.json());
 
 const elders = [
@@ -692,7 +694,7 @@ app.delete('/elder/:firstname', (req,res) => {
     res.status(200).json(deleted)
 })
 
-module.exports = {app, elders};
+export default {app, elders};
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
