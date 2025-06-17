@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model activities {
+  id                    Int                     @id @default(autoincrement())
+  title                 String?                 @db.VarChar(255)
+  elders_activities     elders_activities[]
+  volonteers_activities volonteers_activities[]
+}
+
+model elders {
+  id                Int                 @id @default(autoincrement())
+  firstname         String              @db.VarChar(255)
+  lastname          String              @db.VarChar(255)
+  email             String              @db.VarChar(255)
+  phone_number      String              @db.VarChar(255)
+  birthdate         DateTime?           @db.Timestamp(6)
+  job               String?             @db.VarChar(255)
+  city              String              @db.VarChar(255)
+  zipcode           Int
+  description       String
+  url_image         String?             @db.VarChar(255)
+  created_at        DateTime?           @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime?           @db.Timestamp(6)
+  elders_activities elders_activities[]
+}
+
+model elders_activities {
+  id          Int        @id @default(autoincrement())
+  activity_id Int
+  elder_id    Int
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  activities  activities @relation(fields: [activity_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  elders      elders     @relation(fields: [elder_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model volonteers {
+  id                    Int                     @id @default(autoincrement())
+  firstname             String                  @db.VarChar(255)
+  lastname              String                  @db.VarChar(255)
+  email                 String                  @db.VarChar(255)
+  phone_number          String                  @db.VarChar(255)
+  url_image             String?                 @db.VarChar(255)
+  created_at            DateTime?               @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime?               @db.Timestamp(6)
+  volonteers_activities volonteers_activities[]
+}
+
+model volonteers_activities {
+  id           Int        @id @default(autoincrement())
+  activity_id  Int
+  volonteer_id Int
+  created_at   DateTime?  @default(now()) @db.Timestamptz(6)
+  activities   activities @relation(fields: [activity_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  volonteers   volonteers @relation(fields: [volonteer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
